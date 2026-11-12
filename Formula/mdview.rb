@@ -4,6 +4,7 @@ class Mdview < Formula
   url "https://github.com/tissanr/MumMD/archive/refs/tags/v1.1.0.tar.gz"
   sha256 "0ad222245bf755273574ef8a52acdb8376155ccfbc9ea1d5f7e0d996a370896e"
   license "GPL-3.0-only"
+  revision 1
 
   depends_on macos: :monterey
 
@@ -27,9 +28,18 @@ class Mdview < Formula
     prefix.install "build/MDView.app"
 
     # `mdview datei.md` im Terminal öffnet die Datei in MDView.
+    # Beim ersten Aufruf wird die App nach ~/Applications verlinkt (Finder, Spotlight,
+    # „Öffnen mit“). Das geht nicht während `brew install`, weil Homebrew dort in einer
+    # Sandbox läuft, die keine Schreibzugriffe ins Home-Verzeichnis erlaubt.
     (bin/"mdview").write <<~SH
       #!/bin/sh
-      exec /usr/bin/open -a "#{opt_prefix}/MDView.app" "$@"
+      app="#{opt_prefix}/MDView.app"
+      link="$HOME/Applications/MDView.app"
+      if [ ! -e "$link" ]; then
+        mkdir -p "$HOME/Applications" && ln -sfn "$app" "$link" &&
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$link" >/dev/null 2>&1
+      fi
+      exec /usr/bin/open -a "$app" "$@"
     SH
   end
 
@@ -38,11 +48,12 @@ class Mdview < Formula
       MDView.app was installed to:
         #{opt_prefix}/MDView.app
 
-      To use it from Finder, Spotlight and "Open With", link it into Applications:
-        ln -sf "#{opt_prefix}/MDView.app" ~/Applications/MDView.app
-
       Open files from the terminal with:
         mdview README.md
+
+      The first run of `mdview` links MDView.app into ~/Applications, so it
+      shows up in Finder, Spotlight and "Open With". To do that right away:
+        mdview
     EOS
   end
 
