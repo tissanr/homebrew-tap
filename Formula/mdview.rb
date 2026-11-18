@@ -1,10 +1,9 @@
 class Mdview < Formula
   desc "Minimal, fast-starting native Markdown viewer for macOS with live reload"
   homepage "https://github.com/tissanr/MumMD"
-  url "https://github.com/tissanr/MumMD/archive/refs/tags/v1.1.0.tar.gz"
-  sha256 "0ad222245bf755273574ef8a52acdb8376155ccfbc9ea1d5f7e0d996a370896e"
+  url "https://github.com/tissanr/MumMD/archive/refs/tags/v1.2.0.tar.gz"
+  sha256 "808008886ca96ce6c70e8a3eac9dcecb7f54de60ac5aeeb10a7aca4a1eacc41b"
   license "GPL-3.0-only"
-  revision 1
 
   depends_on macos: :monterey
 
@@ -52,7 +51,8 @@ class Mdview < Formula
         mdview README.md
 
       The first run of `mdview` links MDView.app into ~/Applications, so it
-      shows up in Finder, Spotlight and "Open With". To do that right away:
+      shows up in Finder, Spotlight and "Open With", and enables the Quick Look
+      preview (space bar in Finder). To do that right away:
         mdview
     EOS
   end
@@ -63,5 +63,8 @@ class Mdview < Formula
     assert_path_exists app/"Resources/marked.min.js"
     assert_path_exists app/"Resources/highlight.min.js"
     assert_path_exists app/"Resources/AppIcon.icns"
+    appex = app/"PlugIns/MDViewQuickLook.appex/Contents"
+    assert_predicate appex/"MacOS/MDViewQuickLook", :executable?
+    assert_path_exists appex/"Resources/marked.min.js"
   end
 end
