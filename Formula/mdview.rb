@@ -1,8 +1,8 @@
 class Mdview < Formula
   desc "Minimal, fast-starting native Markdown viewer for macOS with live reload"
   homepage "https://github.com/tissanr/MumMD"
-  url "https://github.com/tissanr/MumMD/archive/refs/tags/v1.2.0.tar.gz"
-  sha256 "808008886ca96ce6c70e8a3eac9dcecb7f54de60ac5aeeb10a7aca4a1eacc41b"
+  url "https://github.com/tissanr/MumMD/archive/refs/tags/v1.2.1.tar.gz"
+  sha256 "3702a6d1f77949472daa8345bcd3dcc8eae0bf9d202b8ee4d1b6d98f127aa97c"
   license "GPL-3.0-only"
 
   depends_on macos: :monterey
